@@ -3,6 +3,7 @@ import Conf from 'conf';
 import Trakt from 'trakt.tv';
 
 import parentLogger from './logger.js';
+import { tokenToString } from './utility.js';
 
 const logger = parentLogger.child({}, { msgPrefix: '[auth] ' });
 
@@ -26,5 +27,5 @@ await trakt.get_codes().then((poll) => {
 
   config.set('traktToken', token);
 
-  logger.info('Got token %s… (expires %s)', token.access_token.substring(0, 8), new Date(token.expires).toUTCString());
+  logger.info('Got token %s', tokenToString(token));
 });
