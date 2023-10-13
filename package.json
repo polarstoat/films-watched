@@ -1,0 +1,9 @@
+{
+  "private": true,
+  "name": "films-watched",
+  "version": "0.1.0",
+  "type": "module",
+  "engines": {
+    "node": ">=18.18.1"
+  }
+}
