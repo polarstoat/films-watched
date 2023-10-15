@@ -8,5 +8,8 @@ module.exports = {
   },
   rules: {
     'import/extensions': ['error', 'ignorePackages'],
+    'import/no-unresolved': ['error', {
+      ignore: ['conf'],
+    }],
   },
 };
