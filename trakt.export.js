@@ -3,7 +3,7 @@ import Conf from 'conf';
 import Trakt from 'trakt.tv';
 
 import parentLogger from './logger.js';
-import { tokenToString } from './utility.js';
+import { tokenToString, isEqual } from './utility.js';
 
 const logger = parentLogger.child({}, { msgPrefix: '[export] ' });
 const config = new Conf({ projectName: 'films-watched' });
@@ -20,7 +20,7 @@ const token = config.get('traktToken');
 await trakt.import_token(token).then((newToken) => {
   logger.debug('Imported token %s', tokenToString(token));
 
-  if (token.access_token !== newToken.access_token) {
+  if (!isEqual(token, newToken)) {
     config.set('token', newToken);
 
     logger.info('Got updated token %s', tokenToString(newToken));

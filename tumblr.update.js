@@ -3,6 +3,7 @@ import Conf from 'conf';
 import tumblr from 'tumblr.js';
 
 import parentLogger from './logger.js';
+import { isEqual } from './utility.js';
 
 const logger = parentLogger.child({}, { msgPrefix: '[update] ' });
 const config = new Conf({ projectName: 'films-watched' });
@@ -31,8 +32,8 @@ async function updatePost(id, body, date) {
     id_string: id,
   };
 
-  if (JSON.stringify(edit) !== JSON.stringify(expectedReturnValue)) {
-    logger.warn(expectedReturnValue, 'Response of edit did not match expected return value');
+  if (!isEqual(edit, expectedReturnValue)) {
+    logger.warn(edit, 'Unexpected response from editLegacyPost call');
   }
 }
 
