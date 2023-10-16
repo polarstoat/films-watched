@@ -10,15 +10,20 @@ function getYearString(str) {
 }
 
 function format(films, openingText, readMorePosition) {
+  logger.trace('Formatting films as Markdown list');
+
   // Convert from reverse-chronological (newest to oldest) to chronological order (oldest to newest)
   films.reverse();
+  logger.trace('Reversed order of films array');
 
   let markdown = openingText;
+  logger.debug('Added opening text: %s', JSON.stringify(openingText));
 
   const startingYear = getYearString(films[0].watched_at);
   let currentYear = startingYear;
-  logger.debug('Set starting year as %s', startingYear);
+  logger.debug('Found starting year: %s', startingYear);
 
+  logger.trace('Looping through films');
   films.forEach((item, index) => {
     // Add headings for each year
     const yearWatched = getYearString(item.watched_at);
@@ -26,7 +31,7 @@ function format(films, openingText, readMorePosition) {
     if (yearWatched !== currentYear) {
       markdown += `<br><strong id="${yearWatched}">${yearWatched}:</strong>\n`;
 
-      logger.debug('Detected start of new year (%s), added heading', yearWatched);
+      logger.debug('Added year heading: %s', yearWatched);
 
       currentYear = yearWatched;
     }
@@ -39,7 +44,7 @@ function format(films, openingText, readMorePosition) {
     });
 
     markdown += `${index + 1}. ${safeTitle} (${year})\n`;
-    // logger.trace('Added %s (%d)', safeTitle, year);
+    // logger.trace('Added film: %s (%d)', safeTitle, year);
 
     // Add Tumblr read more comment
     if (index + 1 === readMorePosition) {
@@ -48,6 +53,9 @@ function format(films, openingText, readMorePosition) {
       logger.debug('Added Tumblr read more link at position %d', readMorePosition);
     }
   });
+  logger.trace('Looped through films');
+
+  logger.info('Formatted %d films as Markdown list', films.length);
 
   return markdown;
 }

@@ -14,28 +14,31 @@ const trakt = new Trakt({
   client_id: process.env.TRAKT_CLIENT_ID,
   client_secret: process.env.TRAKT_CLIENT_SECRET,
 });
+logger.trace('Created Trakt client instance');
 
 const token = config.get('traktToken');
 
 await trakt.import_token(token).then((newToken) => {
-  logger.debug('Imported token %s', tokenToString(token));
+  logger.debug('Imported Trakt token %s', tokenToString(token));
 
   if (!isEqual(token, newToken)) {
     config.set('token', newToken);
 
-    logger.info('Got updated token %s', tokenToString(newToken));
+    logger.info('Got updated token %s and saved it to the config file', tokenToString(newToken));
   }
 });
 
 async function getAllPages(apiMethod) {
   function getPage(page = 1) {
+    logger.trace('Getting %s page %d', apiMethod, page);
+
     return trakt.sync[apiMethod].get({
       type: 'movies',
       pagination: true,
       page,
       limit: TRAKT_QUERY_LIMIT,
     }).then((response) => {
-      logger.debug('Got page %d (%d items)', page, response.data.length);
+      logger.debug('Got %s page %d (%d items)', apiMethod, page, response.data.length);
 
       return response;
     }).catch((err) => {
@@ -50,9 +53,9 @@ async function getAllPages(apiMethod) {
 
   const firstPage = await getPage();
 
-  logger.debug('Got pagination details: %o', firstPage.pagination);
-
   const pageCount = parseInt(firstPage.pagination['page-count'], 10);
+
+  logger.debug('Got %s page count: %d (%s total items)', apiMethod, pageCount, firstPage.pagination['item-count']);
 
   const promises = [firstPage];
 
@@ -66,10 +69,14 @@ async function getAllPages(apiMethod) {
 }
 
 async function getFilms(source) {
+  logger.trace('Exporting Trakt %s', source);
+
   const resultsAsPages = await getAllPages(source);
+
+  logger.trace('Mapping %s pages into flat array of films', source);
   const films = resultsAsPages.flatMap((page) => page.data);
 
-  logger.info('Exported %d films from %s', films.length, source);
+  logger.info('Exported %d films from Trakt %s', films.length, source);
 
   return films;
 }

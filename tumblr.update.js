@@ -14,8 +14,11 @@ const client = new tumblr.Client({
   token: process.env.TUMBLR_TOKEN,
   token_secret: process.env.TUMBLR_TOKEN_SECRET,
 });
+logger.trace('Created Tumblr client instance');
 
 async function updatePost(id, body, date) {
+  logger.trace('Updating post %s', id);
+
   // https://www.tumblr.com/docs/en/api/v2#postedit--edit-a-blog-post-legacy
   // https://tumblr.github.io/tumblr.js/classes/tumblr.Client.html#editLegacyPost
   const edit = await client.editLegacyPost(config.get('tumblrBlogName'), {
@@ -25,7 +28,6 @@ async function updatePost(id, body, date) {
     body,
     date: date.toISOString(),
   });
-  logger.debug(edit, 'Edited post %s', id);
 
   const expectedReturnValue = {
     id: Number.parseInt(id, 10),
@@ -35,6 +37,8 @@ async function updatePost(id, body, date) {
   if (!isEqual(edit, expectedReturnValue)) {
     logger.warn(edit, 'Unexpected response from editLegacyPost call');
   }
+
+  logger.info('Updated post %s', id);
 }
 
 export default updatePost;
