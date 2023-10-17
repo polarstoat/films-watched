@@ -1,6 +1,7 @@
 import 'dotenv/config';
 import Conf from 'conf';
 import tumblr from 'tumblr.js';
+import { diffLines } from 'diff';
 
 import parentLogger from './logger.js';
 import { isEqual } from './utility.js';
@@ -16,7 +17,41 @@ const client = new tumblr.Client({
 });
 logger.trace('Created Tumblr client instance');
 
+async function getCurrentPostBody(id) {
+  logger.trace('Getting post %s', id);
+  const check = await client.blogPosts(config.get('tumblrBlogName'), {
+    id,
+    filter: 'raw',
+  });
+
+  logger.debug('Got post %s', id);
+
+  return check.posts[0].body;
+}
+
 async function updatePost(id, body, date) {
+  logger.trace('Checking if update of post %s is needed', id);
+  const currentPostBody = await getCurrentPostBody(id);
+
+  if (currentPostBody === body) {
+    logger.info('No update of post %s needed', id);
+
+    return;
+  }
+
+  logger.trace('Update of post %s is needed, detecting changes…', id);
+
+  const changes = diffLines(currentPostBody, body);
+  changes.forEach((part) => {
+    if (!part.removed && !part.added) {
+      logger.trace('%d lines unchanged', part.count);
+    } else if (part.added) {
+      logger.info('%d lines added: %s', part.count, JSON.stringify(part.value));
+    } else if (part.removed) {
+      logger.info('%d lines removed: %s', part.count, JSON.stringify(part.value));
+    }
+  });
+
   logger.trace('Updating post %s', id);
 
   // https://www.tumblr.com/docs/en/api/v2#postedit--edit-a-blog-post-legacy
