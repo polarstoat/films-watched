@@ -7,5 +7,6 @@ module.exports = {
     ecmaVersion: '2023',
   },
   rules: {
+    'import/extensions': ['error', 'ignorePackages'],
   },
 };
