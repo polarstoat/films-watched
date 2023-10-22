@@ -1,4 +1,3 @@
-import 'dotenv/config';
 import Conf from 'conf';
 import tumblr from 'tumblr.js';
 import { diffLines } from 'diff';

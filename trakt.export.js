@@ -1,4 +1,3 @@
-import 'dotenv/config';
 import Conf from 'conf';
 import Trakt from 'trakt.tv';
 

@@ -1,4 +1,3 @@
-import 'dotenv/config';
 import { encode } from 'html-entities';
 
 import parentLogger from './logger.js';
