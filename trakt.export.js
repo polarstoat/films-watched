@@ -2,12 +2,18 @@ import Conf from 'conf';
 import Trakt from 'trakt.tv';
 
 import parentLogger from './logger.js';
-import { tokenToString, isEqual } from './utility.js';
+import { tokenToString, isEqual, validateEnvironmentVariables } from './utility.js';
 
 const logger = parentLogger.child({}, { msgPrefix: '[export] ' });
 const config = new Conf({ projectName: 'films-watched' });
 
 const TRAKT_QUERY_LIMIT = 500; // Number of results to return per page
+
+validateEnvironmentVariables(
+  ['TRAKT_CLIENT_ID', 'TRAKT_CLIENT_SECRET'],
+  /^[a-f\d]{64}$/i,
+  logger,
+);
 
 const trakt = new Trakt({
   client_id: process.env.TRAKT_CLIENT_ID,

@@ -3,10 +3,16 @@ import tumblr from 'tumblr.js';
 import { diffLines } from 'diff';
 
 import parentLogger from './logger.js';
-import { isEqual } from './utility.js';
+import { isEqual, validateEnvironmentVariables } from './utility.js';
 
 const logger = parentLogger.child({}, { msgPrefix: '[update] ' });
 const config = new Conf({ projectName: 'films-watched' });
+
+validateEnvironmentVariables(
+  ['TUMBLR_CONSUMER_KEY', 'TUMBLR_CONSUMER_SECRET', 'TUMBLR_TOKEN', 'TUMBLR_TOKEN_SECRET'],
+  /^[a-zA-Z\d]{50}$/,
+  logger,
+);
 
 const client = new tumblr.Client({
   consumer_key: process.env.TUMBLR_CONSUMER_KEY,
