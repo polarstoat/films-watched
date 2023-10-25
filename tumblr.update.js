@@ -1,12 +1,12 @@
-import Conf from 'conf';
 import tumblr from 'tumblr.js';
 import { diffLines } from 'diff';
 
-import parentLogger from './logger.js';
-import { isEqual, validateEnvironmentVariables } from './utility.js';
+import parentLogger from './utils/logger.js';
+import config from './utils/config.js';
+import isEqual from './utils/isEqual.js';
+import validateEnvironmentVariables from './utils/validateEnvironmentVariables.js';
 
 const logger = parentLogger.child({}, { msgPrefix: '[update] ' });
-const config = new Conf({ projectName: 'films-watched' });
 
 validateEnvironmentVariables(
   ['TUMBLR_CONSUMER_KEY', 'TUMBLR_CONSUMER_SECRET', 'TUMBLR_TOKEN', 'TUMBLR_TOKEN_SECRET'],

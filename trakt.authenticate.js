@@ -1,11 +1,10 @@
-import Conf from 'conf';
 import Trakt from 'trakt.tv';
 
-import parentLogger from './logger.js';
-import { tokenToString } from './utility.js';
+import parentLogger from './utils/logger.js';
+import config from './utils/config.js';
+import tokenToString from './utils/tokenToString.js';
 
 const logger = parentLogger.child({}, { msgPrefix: '[auth] ' });
-const config = new Conf({ projectName: 'films-watched' });
 
 const trakt = new Trakt({
   client_id: process.env.TRAKT_CLIENT_ID,

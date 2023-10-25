@@ -1,12 +1,11 @@
 import 'dotenv/config';
-import Conf from 'conf';
 
-import logger from './logger.js';
+import logger from './utils/logger.js';
+import config from './utils/config.js';
+
 import getFilms from './trakt.export.js';
 import format from './format.js';
 import updatePost from './tumblr.update.js';
-
-const config = new Conf({ projectName: 'films-watched' });
 
 const syncs = config.get('syncs');
 

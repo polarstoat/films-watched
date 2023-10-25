@@ -1,11 +1,12 @@
-import Conf from 'conf';
 import Trakt from 'trakt.tv';
 
-import parentLogger from './logger.js';
-import { tokenToString, isEqual, validateEnvironmentVariables } from './utility.js';
+import parentLogger from './utils/logger.js';
+import config from './utils/config.js';
+import isEqual from './utils/isEqual.js';
+import tokenToString from './utils/tokenToString.js';
+import validateEnvironmentVariables from './utils/validateEnvironmentVariables.js';
 
 const logger = parentLogger.child({}, { msgPrefix: '[export] ' });
-const config = new Conf({ projectName: 'films-watched' });
 
 const TRAKT_QUERY_LIMIT = 500; // Number of results to return per page
 

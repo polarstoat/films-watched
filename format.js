@@ -1,6 +1,6 @@
 import { encode } from 'html-entities';
 
-import parentLogger from './logger.js';
+import parentLogger from './utils/logger.js';
 
 const logger = parentLogger.child({}, { msgPrefix: '[format] ' });
 
