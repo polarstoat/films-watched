@@ -45,11 +45,13 @@ function format(films, openingText, readMorePosition) {
     markdown += `${index + 1}. ${safeTitle} (${year})\n`;
     // logger.trace('Added film: %s (%d)', safeTitle, year);
 
-    // Add Tumblr read more comment
-    if (index + 1 === readMorePosition) {
-      markdown += '<!-- more -->\n';
+    if (typeof readMorePosition !== 'undefined') {
+      // Add Tumblr read more comment
+      if (index + 1 === readMorePosition) {
+        markdown += '<!-- more -->\n';
 
-      logger.debug('Added Tumblr read more link at position %d', readMorePosition);
+        logger.debug('Added Tumblr read more link at position %d', readMorePosition);
+      }
     }
   });
   logger.trace('Looped through films');
