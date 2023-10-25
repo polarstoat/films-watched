@@ -1,16 +1,9 @@
-import Trakt from 'trakt.tv';
-
 import parentLogger from './utils/logger.js';
 import config from './utils/config.js';
-import tokenToString from './utils/tokenToString.js';
+
+import trakt, { tokenToString } from './trakt.js';
 
 const logger = parentLogger.child({}, { msgPrefix: '[auth] ' });
-
-const trakt = new Trakt({
-  client_id: process.env.TRAKT_CLIENT_ID,
-  client_secret: process.env.TRAKT_CLIENT_SECRET,
-});
-logger.trace('Created Trakt client instance');
 
 await trakt.get_codes().then((poll) => {
   logger.debug(poll, 'Got OAuth codes from Trakt');

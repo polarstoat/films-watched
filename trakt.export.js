@@ -1,26 +1,12 @@
-import Trakt from 'trakt.tv';
-
 import parentLogger from './utils/logger.js';
 import config from './utils/config.js';
 import isEqual from './utils/isEqual.js';
-import tokenToString from './utils/tokenToString.js';
-import validateEnvironmentVariables from './utils/validateEnvironmentVariables.js';
+
+import trakt, { tokenToString } from './trakt.js';
 
 const logger = parentLogger.child({}, { msgPrefix: '[export] ' });
 
 const TRAKT_QUERY_LIMIT = 500; // Number of results to return per page
-
-validateEnvironmentVariables(
-  ['TRAKT_CLIENT_ID', 'TRAKT_CLIENT_SECRET'],
-  /^[a-f\d]{64}$/i,
-  logger,
-);
-
-const trakt = new Trakt({
-  client_id: process.env.TRAKT_CLIENT_ID,
-  client_secret: process.env.TRAKT_CLIENT_SECRET,
-});
-logger.trace('Created Trakt client instance');
 
 const token = config.get('traktToken');
 
