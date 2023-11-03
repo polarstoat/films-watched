@@ -21,4 +21,11 @@ await trakt.get_codes().then((poll) => {
   config.set('traktToken', token);
 
   logger.info('Got token %s and saved it to the config file', tokenToString(token));
+}).catch((err) => {
+  if (err.message === 'Expired') {
+    logger.error('Code expired. Run script again to generate a new code');
+    process.exit(1);
+  }
+
+  throw err;
 });
