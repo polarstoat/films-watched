@@ -1,3 +1,5 @@
+import 'dotenv/config';
+
 import parentLogger from './utils/logger.js';
 import config from './utils/config.js';
 
