@@ -74,7 +74,7 @@ This project gets a user's watch history from [Trakt](https://trakt.tv/dashboard
 This project is intended to be run with cron. The following cron job starts this script at 4:00AM every day, saving the output of both `STDOUT` and `STDERR` to the `~/.local/state/films-watched-nodejs/output.log` log file.
 
 ```
-0 4 * * * cd /home/USERNAME/films-watched && node ./index.js >> /home/USERNAME/.local/state/films-watched-nodejs/output.log 2>&1
+0 4 * * * cd /home/USERNAME/films-watched && node ./app.js >> /home/USERNAME/.local/state/films-watched-nodejs/output.log 2>&1
 ```
 
 ### Notes
