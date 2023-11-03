@@ -68,6 +68,12 @@ async function getFilms(source) {
   logger.trace('Mapping %s pages into flat array of films', source);
   const films = resultsAsPages.flatMap((page) => page.data);
 
+  if (source === 'history') {
+    // Convert from reverse-chronological (newest first) to chronological order (oldest first)
+    films.reverse();
+    logger.debug('Reversed order of films array for %s API method (newest first → oldest first)', source);
+  }
+
   logger.info('Exported %d films from Trakt %s', films.length, source);
 
   return films;

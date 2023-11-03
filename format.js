@@ -11,10 +11,6 @@ function getYearString(str) {
 function format(films, openingText, readMorePosition) {
   logger.trace('Formatting films as Markdown list');
 
-  // Convert from reverse-chronological (newest to oldest) to chronological order (oldest to newest)
-  films.reverse();
-  logger.trace('Reversed order of films array');
-
   let markdown = openingText;
   logger.debug('Added opening text: %s', JSON.stringify(openingText));
 
