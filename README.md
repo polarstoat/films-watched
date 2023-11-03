@@ -1,5 +1,7 @@
 # Films watched
 
+![Project version](https://img.shields.io/github/package-json/v/polarstoat/films-watched) ![Minimum Node.js version](https://img.shields.io/badge/dynamic/json?url=https%3A%2F%2Fraw.githubusercontent.com%2Fpolarstoat%2Ffilms-watched%2Fmain%2Fpackage.json&query=%24.engines.node&label=node&color=brightgreen) [![License](https://img.shields.io/github/license/polarstoat/films-watched)](https://github.com/polarstoat/films-watched/blob/main/LICENSE.txt) [![Code style](https://img.shields.io/badge/code_style-airbnb--base-FF5A5F)](https://github.com/airbnb/javascript)
+
 > Update a Tumblr blog post with Trakt watch history
 
 This project gets a user's watch history from [Trakt](https://trakt.tv/dashboard), formats it nicely as markdown, and then updates the contents of a blog post on [Tumblr](https://www.tumblr.com) with it.
