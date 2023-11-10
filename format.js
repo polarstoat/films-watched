@@ -8,11 +8,20 @@ function getYearString(str) {
   return str.substring(0, 4);
 }
 
-function format(films, openingText, readMorePosition) {
+function format(films, {
+  textBefore = '',
+  textAfter = '',
+  includeYearHeadings = false,
+  tumblrTruncateAfter = null,
+}) {
   logger.trace('Formatting films as Markdown list');
 
-  let markdown = openingText;
-  logger.debug('Added opening text: %s', JSON.stringify(openingText));
+  let markdown = '';
+
+  if (textBefore) {
+    markdown += textBefore;
+    logger.debug('Added opening text: %s', JSON.stringify(textBefore));
+  }
 
   const startingYear = getYearString(films[0].watched_at);
   let currentYear = startingYear;
@@ -21,14 +30,16 @@ function format(films, openingText, readMorePosition) {
   logger.trace('Looping through films');
   films.forEach((item, index) => {
     // Add headings for each year
-    const yearWatched = getYearString(item.watched_at);
+    if (includeYearHeadings === true) {
+      const yearWatched = getYearString(item.watched_at);
 
-    if (yearWatched !== currentYear) {
-      markdown += `<br><strong id="${yearWatched}">${yearWatched}:</strong>\n`;
+      if (yearWatched !== currentYear) {
+        markdown += `<br><strong id="${yearWatched}">${yearWatched}:</strong>\n`;
 
-      logger.debug('Added year heading: %s', yearWatched);
+        logger.debug('Added year heading: %s', yearWatched);
 
-      currentYear = yearWatched;
+        currentYear = yearWatched;
+      }
     }
 
     // Add film
@@ -41,16 +52,21 @@ function format(films, openingText, readMorePosition) {
     markdown += `${index + 1}. ${safeTitle} (${year})\n`;
     // logger.trace('Added film: %s (%d)', safeTitle, year);
 
-    if (typeof readMorePosition !== 'undefined') {
+    if (typeof tumblrTruncateAfter !== 'undefined') {
       // Add Tumblr read more comment
-      if (index + 1 === readMorePosition) {
+      if (index + 1 === tumblrTruncateAfter) {
         markdown += '<!-- more -->\n';
 
-        logger.debug('Added Tumblr read more link at position %d', readMorePosition);
+        logger.debug('Added Tumblr read more link at position %d', tumblrTruncateAfter);
       }
     }
   });
   logger.trace('Looped through films');
+
+  if (textAfter) {
+    markdown += textAfter;
+    logger.debug('Added closing text: %s', JSON.stringify(textAfter));
+  }
 
   logger.info('Formatted %d films as Markdown list', films.length);
 

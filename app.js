@@ -9,16 +9,20 @@ import updatePost from './tumblr.update.js';
 
 const syncs = config.get('syncs');
 
-syncs.forEach(async (sync) => {
-  logger.debug(sync, 'Found sync object in config file');
+syncs.forEach(async ({
+  traktAPIMethod: apiMethod,
+  tumblrPostID: postID,
+  formattingOptions = {},
+}) => {
+  logger.info('Synchronising Tumblr post %s with Trakt %s', postID, apiMethod);
 
-  const films = await getFilms(sync.traktAPIMethod);
+  const films = await getFilms(apiMethod);
 
-  const markdown = format(films, sync.startingText, sync.tumblrReadMoreLinkPosition);
+  const postBody = format(films, formattingOptions);
 
   await updatePost(
-    sync.tumblrPostID,
-    markdown,
+    postID,
+    postBody,
     new Date(films.at(-1).watched_at), // Use the date the most recently watched film was watched at
   );
 });

@@ -49,22 +49,26 @@ This project gets a user's watch history from [Trakt](https://trakt.tv/dashboard
 
    ```json
    {
-   	"traktToken": {
-   		"access_token": "",
-   		"expires": 1234567891011,
-   		"refresh_token": ""
-   	},
-   	"tumblrBlogName": "YOUR_TUMBLR_BLOG_NAME_HERE",
-   	"syncs": [
-   		{
-   			"tumblrPostID": "YOUR_TUMBLR_POST_ID_HERE",
-   			"tumblrReadMoreLinkPosition": 7,
-   			"startingText": "",
-   			"includeYearHeadings": true,
-   			"traktAPIMethod": "history"
-   		}
-   	]
+      "traktToken": {
+         "access_token": "",
+         "expires": 1234567891011,
+         "refresh_token": ""
+      },
+      "tumblrBlogName": "YOUR_TUMBLR_BLOG_NAME_HERE",
+      "syncs": [
+         {
+            "tumblrPostID": "YOUR_TUMBLR_POST_ID_HERE",
+            "traktAPIMethod": "history",
+            "formattingOptions" : {
+               "textBefore": "",
+               "textAfter": "",
+               "includeYearHeadings": true,
+               "tumblrTruncateAfter": 7
+            }
+         }
+      ]
    }
+
    ```
    ##### Config file locations
 
