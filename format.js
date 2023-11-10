@@ -44,10 +44,24 @@ function format(films, {
 
     // Add film
     const { movie: { title, year } } = item;
+
+    // the é in 'Les Misérables (2012)' seemed to be causing 400 errors from Tumblr, this fixes that
     const safeTitle = encode(title, {
-      mode: 'nonAscii', // the é in 'Les Misérables (2012)' seemed to be causing 400 errors frpm Tumblr, this fixes that
-      level: 'xml', // 'all', 'html5', and 'html4' don't work and result in incorrect encodings
+      /*
+      'specialChars' doesn't encode problem characters
+      'extensive' encodes many unnecesarry characters (like commas)
+      'nonAscii' encodes ampersands, which isn't necessary
+      'nonAsciiPrintable' encodes ampersands and apostrophes, again not needed
+      'nonAsciiPrintableOnly' seems to get just the problem characters: ½, é, ·, ä, ʻ, ☆, à, …
+       */
+      mode: 'nonAsciiPrintableOnly',
+      /*
+      'all' (alias of 'html5') results in '&half;', '&star;', and '&mldr;' showing up as text
+      'xml' and 'html4' both display correctly on Tumblr
+       */
+      level: 'html4',
     });
+    // if (safeTitle !== title) logger.trace('Encoded "%s" as "%s"', title, safeTitle);
 
     markdown += `${index + 1}. ${safeTitle} (${year})\n`;
     // logger.trace('Added film: %s (%d)', safeTitle, year);
