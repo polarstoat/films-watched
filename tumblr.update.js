@@ -78,7 +78,7 @@ async function updatePost(id, body, date) {
     logger.warn(edit, 'Unexpected response from editLegacyPost call');
   }
 
-  logger.info('Updated post %s', id);
+  logger.info('Updated post %s and set date to %s', id, date.toUTCString());
 }
 
 export default updatePost;
