@@ -8,6 +8,31 @@ function getYearString(str) {
   return str.substring(0, 4);
 }
 
+/**
+ * Encodes everything outiside of the ASCII printable characters, whilst keeping HTML special
+ * characters intact, using HTML4 named references
+ *
+ * Without this, characters like the 'é' in 'Les Misérables (2012)' caused 400 errors from Tumblr
+ *
+ * @see https://www.npmjs.com/package/html-entities?activeTab=readme#usage
+ * @see https://en.wikipedia.org/wiki/ASCII#Printable_characters
+ *
+ * @param  {string} dirtyString The string to be encoded
+ * @return {string}             The sanitised (encoded) string
+ */
+function sanitise(dirtyString) {
+  const cleanString = encode(dirtyString, {
+    mode: 'nonAsciiPrintableOnly',
+    level: 'html4',
+  });
+
+  // if (cleanString !== dirtyString) {
+  //   logger.trace('Encoded %s as %s', JSON.stringify(dirtyString), JSON.stringify(cleanString));
+  // }
+
+  return cleanString;
+}
+
 function format(films, {
   textBefore = '',
   textAfter = '',
@@ -19,7 +44,7 @@ function format(films, {
   let markdown = '';
 
   if (textBefore) {
-    markdown += textBefore;
+    markdown += sanitise(textBefore);
     logger.debug('Added opening text: %s', JSON.stringify(textBefore));
   }
 
@@ -45,23 +70,7 @@ function format(films, {
     // Add film
     const { movie: { title, year } } = item;
 
-    // the é in 'Les Misérables (2012)' seemed to be causing 400 errors from Tumblr, this fixes that
-    const safeTitle = encode(title, {
-      /*
-      'specialChars' doesn't encode problem characters
-      'extensive' encodes many unnecesarry characters (like commas)
-      'nonAscii' encodes ampersands, which isn't necessary
-      'nonAsciiPrintable' encodes ampersands and apostrophes, again not needed
-      'nonAsciiPrintableOnly' seems to get just the problem characters: ½, é, ·, ä, ʻ, ☆, à, …
-       */
-      mode: 'nonAsciiPrintableOnly',
-      /*
-      'all' (alias of 'html5') results in '&half;', '&star;', and '&mldr;' showing up as text
-      'xml' and 'html4' both display correctly on Tumblr
-       */
-      level: 'html4',
-    });
-    // if (safeTitle !== title) logger.trace('Encoded "%s" as "%s"', title, safeTitle);
+    const safeTitle = sanitise(title);
 
     markdown += `${index + 1}. ${safeTitle} (${year})\n`;
     // logger.trace('Added film: %s (%d)', safeTitle, year);
@@ -78,7 +87,7 @@ function format(films, {
   logger.trace('Looped through films');
 
   if (textAfter) {
-    markdown += textAfter;
+    markdown += sanitise(textAfter);
     logger.debug('Added closing text: %s', JSON.stringify(textAfter));
   }
 
