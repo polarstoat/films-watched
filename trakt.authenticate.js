@@ -25,6 +25,9 @@ await trakt.get_codes().then((poll) => {
   if (err.code === 'ENOTFOUND') {
     logger.error('Encountered an ENOTFOUND error. Potential cause: no internet connection');
     process.exit(1);
+  } else if (err.code === 'EAI_AGAIN') {
+    logger.error('Encountered an EAI_AGAIN error. Potential cause: temporary DNS failure');
+    process.exit(1);
   } else if (err.message === 'Expired') {
     logger.error('Code expired. Run script again to generate a new code');
     process.exit(1);
