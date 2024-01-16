@@ -14,7 +14,7 @@ await trakt.import_token(token).then((newToken) => {
   logger.debug('Imported Trakt token %s', tokenToString(token));
 
   if (!isEqual(token, newToken)) {
-    config.set('token', newToken);
+    config.set('traktToken', newToken);
 
     logger.info('Got updated token %s and saved it to the config file', tokenToString(newToken));
   }
