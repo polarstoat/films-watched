@@ -48,17 +48,16 @@ async function loadToken() {
   return token;
 }
 
-const token = await loadToken();
+const localSavedToken = await loadToken();
 
-await trakt.import_token(token).then(async (newToken) => {
-  logger.debug('Imported Trakt token %s', tokenToString(token));
+const traktReturnedToken = await trakt.import_token(localSavedToken);
+logger.trace('Imported token into Trakt client instance');
 
-  if (!isEqual(token, newToken)) {
-    await saveToken(newToken);
+if (!isEqual(localSavedToken, traktReturnedToken)) {
+  await saveToken(traktReturnedToken);
 
-    logger.info('Got updated token %s and saved it', tokenToString(newToken));
-  }
-});
+  logger.info('Got updated token %s and saved it', tokenToString(traktReturnedToken));
+}
 
 export default trakt;
 export {
