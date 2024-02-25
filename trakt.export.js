@@ -1,22 +1,21 @@
 import parentLogger from './utils/logger.js';
-import config from './utils/config.js';
 import isEqual from './utils/isEqual.js';
 
-import trakt, { tokenToString } from './trakt.js';
+import trakt, { tokenToString, saveToken, loadToken } from './trakt.js';
 
 const logger = parentLogger.child({}, { msgPrefix: '[export] ' });
 
 const TRAKT_QUERY_LIMIT = 500; // Number of results to return per page
 
-const token = config.get('traktToken');
+const token = await loadToken();
 
-await trakt.import_token(token).then((newToken) => {
+await trakt.import_token(token).then(async (newToken) => {
   logger.debug('Imported Trakt token %s', tokenToString(token));
 
   if (!isEqual(token, newToken)) {
-    config.set('traktToken', newToken);
+    await saveToken(newToken);
 
-    logger.info('Got updated token %s and saved it to the config file', tokenToString(newToken));
+    logger.info('Got updated token %s and saved it', tokenToString(newToken));
   }
 });
 
