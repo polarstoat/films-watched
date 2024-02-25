@@ -7,6 +7,7 @@ import { loadJsonFile } from 'load-json-file';
 
 import parentLogger from './utils/logger.js';
 import validateEnvironmentVariables from './utils/validateEnvironmentVariables.js';
+import isEqual from './utils/isEqual.js';
 
 const logger = parentLogger.child({}, { msgPrefix: '[trakt] ' });
 
@@ -24,8 +25,6 @@ const trakt = new Trakt({
   client_secret: process.env.TRAKT_CLIENT_SECRET,
 });
 logger.trace('Created Trakt client instance');
-
-export default trakt;
 
 function tokenToString(t) {
   return `${t.access_token.substring(0, 8)}… (expires ${new Date(t.expires).toUTCString()})`;
@@ -49,8 +48,20 @@ async function loadToken() {
   return token;
 }
 
+const token = await loadToken();
+
+await trakt.import_token(token).then(async (newToken) => {
+  logger.debug('Imported Trakt token %s', tokenToString(token));
+
+  if (!isEqual(token, newToken)) {
+    await saveToken(newToken);
+
+    logger.info('Got updated token %s and saved it', tokenToString(newToken));
+  }
+});
+
+export default trakt;
 export {
   tokenToString,
   saveToken,
-  loadToken,
 };
