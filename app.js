@@ -3,6 +3,7 @@ import 'dotenv/config';
 import logger from './utils/logger.js';
 import config from './utils/config.js';
 
+import shouldUpdate from './trakt.lastActivity.js';
 import getFilms from './trakt.export.js';
 import format from './format.js';
 import updatePost from './tumblr.update.js';
@@ -15,6 +16,12 @@ syncs.forEach(async ({
   formattingOptions = {},
 }) => {
   logger.info('Synchronising Tumblr post %s with Trakt %s', postID, apiMethod);
+
+  if (!await shouldUpdate(apiMethod)) {
+    logger.info('No update needed');
+
+    return;
+  }
 
   const films = await getFilms(apiMethod);
 
